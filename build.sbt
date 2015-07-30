@@ -1,6 +1,9 @@
 libraryDependencies +=
   "net.databinder" %% "dispatch-http" % "0.8.8"
 
+libraryDependencies +=
+  "com.github.scala-incubator.io" %% "scala-io-file" % "0.3.0"
+
 libraryDependencies ++= {
   val liftVersion = "2.4"
     Seq(

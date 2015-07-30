@@ -1,11 +1,15 @@
-// TODO: ファイルの保存
-// TODO: 並列処理
-
 import dispatch._
 import scala.xml.{ NodeSeq, Elem }
 import net.liftweb._
 import common._
 import util._
+import scalax.io._
+
+object Filename {
+  def unapply(url: String): Option[String] = {
+    url.split("/").reverse.toList.headOption
+  }
+}
 
 object KeikoScraping {
   def main(args: Array[String]) = {
@@ -15,6 +19,15 @@ object KeikoScraping {
 
     val elem: NodeSeq = Html5.parse(html) openOr NodeSeq.Empty
     // \は直下の要素, \\は間を飛ばして探索
-    elem \\ "img" \\ "@src" foreach { img => println(img.text) }
+    // (elem \\ "img" \\ "@src").foreach { img => saveImage(img.text) }
+    (elem \\ "img" \\ "@src").par.foreach { img => saveImage(img.text) }
+  }
+
+  def saveImage(url: String) = {
+    val data = Resource.fromURL(url).byteArray
+    url match {
+      case Filename(file) => Resource.fromFile(new java.io.File("data", file)).write(data)
+      case _ => sys.error("not file")
+    }
   }
 }
