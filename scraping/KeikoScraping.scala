@@ -20,7 +20,8 @@ object KeikoScraping {
     val elem: NodeSeq = Html5.parse(html) openOr NodeSeq.Empty
     // \は直下の要素, \\は間を飛ばして探索
     // (elem \\ "img" \\ "@src").foreach { img => saveImage(img.text) }
-    (elem \\ "img" \\ "@src").par.foreach { img => saveImage(img.text) }
+    // (elem \\ "img" \\ "@src").par.foreach { img => saveImage(img.text) }
+    (elem \\ "img" \\ "@src").par.foreach { img => saveURL(img.text) }
   }
 
   def saveImage(url: String) = {
@@ -29,5 +30,11 @@ object KeikoScraping {
       case Filename(file) => Resource.fromFile(new java.io.File("data", file)).write(data)
       case _ => sys.error("not file")
     }
+  }
+
+  def saveURL(url: String) = {
+    val file = new java.io.PrintWriter(new java.io.FileWriter("images/url_list", true))
+    file.write(url + '\n')
+    file.close()
   }
 }
