@@ -12,7 +12,7 @@ fs = require 'fs'
 path = require 'path'
 
 module.exports = (robot) ->
-  robot.hear /image/i, (res) ->
+  robot.respond /image/i, (res) ->
     url = fs.readFileSync path.resolve __dirname, "../scraping/images/url_list"
     arr = url.toString().split '\n'
     res.send res.random arr.filter (str) -> str != ""
